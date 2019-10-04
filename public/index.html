@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Multiplicaciones</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  </head>
+  <body class="is-preload">
+      <section id="intro" class="main style1 dark fullscreen">
+          <header>
+            <h2>Multiplicaciones.</h2>
+          </header>
+        </div>
+      </section>
+      <section id="contact" class="main style3 secondary">
+        <div class="content">
+          <header>
+            <h2 name="multiplicacion">Raliza tu multiplicación.</h2><br>
+            <img src="images/1.jpg" width="500"> 
+          </header>
+          <div class="box">
+              <div class="fields">
+                <div class="field half">
+<form id="formmultiplicacion">
+      <p><output id="respuesta"></output></p>
+      <p>
+        <label class="color" >Ingresa un numero:</label>
+        <input type="number"  id="num1" required placeholder="Ingresa un numero"></p>
+
+      <p>
+         <label class="color" >Ingresa un numero:</label>
+         <input type="number" id="num2" required placeholder="Ingresa un numero"></p>
+      <p>
+        <button type="submit">Multiplicar (Hilos)</button>
+        <button type="button" id="multiplicarHttp">Multiplicar (Http)</button>
+      </p>
+    </form>
+
+
+        <script type="module">
+      const hilo = new Worker("wwMultiplicacion.js");
+      formmultiplicacion.addEventListener("submit", multipliqueHilo);
+      multiplicarHttp.addEventListener("click", multipliqueHttp);
+      hilo.addEventListener("message", evt => muestraRespuesta(evt.data));
+      function muestraRespuesta(texto) {
+        respuesta.value = texto;
+      }
+      function multipliqueHilo(evt) {
+        evt.preventDefault();
+        const modelo = leeModelo();
+        hilo.postMessage(modelo);
+      }
+      function leeModelo() {
+        return {
+          num1: num1.value.trim(),
+          num2: num2.value.trim()
+        };
+      }
+      function multipliqueHttp() {
+        const modelo = leeModelo();
+        fetch("multiplicacion?num1=" + encodeURIComponent(modelo.num1)
+          + "&num2=" + encodeURIComponent(modelo.num2))
+          .then(
+            respuestaHttp => {
+              if (respuestaHttp.ok) {
+                return respuestaHttp.text();
+              } else {
+                throw new Error(respuestaHttp.statusText)
+              }
+            })
+          .then(texto => muestraRespuesta(texto))
+          .catch(e => muestraRespuesta(e.message));
+      }
+    </script>
+              
+                </div>
+
+          </div>
+        </div>
+      </section>
+
+    <!-- Footer -->
+      <footer id="footer">
+        <!-- Menu -->
+          <ul class="menu">
+            <li><h2> Gutierrez Hernandez Angel Antonio &copy;  IC51</h2></li>
+          </ul>
+
+      </footer>
+
+    <!-- Scripts -->
+      <script src="assets/js/jquery.min.js"></script>
+      <script src="assets/js/jquery.poptrox.min.js"></script>
+      <script src="assets/js/jquery.scrolly.min.js"></script>
+      <script src="assets/js/jquery.scrollex.min.js"></script>
+      <script src="assets/js/browser.min.js"></script>
+      <script src="assets/js/breakpoints.min.js"></script>
+      <script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script>
+
+      
+
+
+  </body>
+</html>
